@@ -21,6 +21,72 @@ class GollumPagesController < ApplicationController
     show_page(params[:id])
   end
 
+#    map = @wiki.tree_map_for(@wiki.ref)
+#    all =''
+#    map.each do |entry|
+#    	#all = all + ',' + entry.dir + '/' + entry.name
+#    	all = all + ',' + entry.path.downcase
+#    end
+#    if entry = map.detect { |entry| entry.path.downcase == 'file/' + @file_name }
+#    	all = 'NASEL JSEM' + entry.path
+#    end
+#
+
+
+  def file 
+    ext = params[:ext]
+    @file_name = params[:id] + '.' + ext
+    dir =  @wiki.page_file_dir
+    mime_type = Mime::Type.lookup_by_extension(ext) || 'text/plain'
+
+    if file = @wiki.file(File.join(dir, @file_name))
+       name = file.name
+       url = file.url_path
+       # FIXME: content-type has 'charset=utf8' why?
+       render :text => file.raw_data, :content_type=> mime_type
+    else
+      render :status => 404, :inline => '404 not found:dir:' + dir +',file:' + @file_name 
+      return
+    end
+  end
+
+  # <form><input type=file name=upload[datafile]>
+  def upload 
+    if request.get?
+    	# render upload.html.erb
+    	return
+    end
+
+    # post
+
+    @user = User.current
+    upload = params[:file]
+    name = upload.original_filename
+    data = upload.read
+    dir =  @wiki.page_file_dir
+    write_file(dir, name, data)
+    #render :inline => 'diky:' + name
+    flash[:notice] = name + ' uploaded'
+    redirect_to :action => :upload
+  end
+  
+  def write_file(dir, name, data)
+
+    message = 'write file ' + name
+    commit = { :message => message, :name => @user.name, :email => @user.mail }
+    commiter = Gollum::Committer.new(@wiki, commit)
+
+    path = File.join(dir, name)
+    path = path[1..-1] if path =~ /^\//
+
+    commiter.index.add(path, data)
+    commiter.commit
+    @wiki.clear_cache
+
+    # fixme: do it if not bare
+    #commiter.update_working_dir( ... )
+  end
+
   def edit
     @page_name = params[:id]
     @page = @wiki.page(@page_name)
@@ -35,7 +101,6 @@ class GollumPagesController < ApplicationController
     @user = User.current
 
     commit = { :message => params[:page][:message], :name => @user.name, :email => @user.mail }
-
 
     if @page
       @wiki.update_page(@page, @page.name, @page_format, params[:page][:raw_data], commit)

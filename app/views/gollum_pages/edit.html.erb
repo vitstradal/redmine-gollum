@@ -5,7 +5,9 @@
     <%= select(:page, :format, options_for_select(Gollum::Page::FORMAT_NAMES.keys, @page_format), {:disabled => false}) %></p>
   </p>
 
-<%= f.text_area :raw_data, :class => "wiki-edit", :cols => 100, :row => 25 %>
+<%= f.text_area :raw_data, :class => "wiki-edit", :id=> 'raw_data_id',  :cols => 100, :row => 25 %>
+<%= wikitoolbar_for 'raw_data_id' %>
+
 <p>
   <%= f.submit(l(:button_save)) %>
   <% #preview
@@ -15,5 +17,7 @@
   <%= link_to(l(:label_preview), previewScript) %>
 </p>
 <% end %>
+
+
 <div id="preview"></div>
 <%= javascript_include_tag "preview.js", :plugin => 'redmine_gollum' %>
