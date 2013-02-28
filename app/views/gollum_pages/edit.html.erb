@@ -1,15 +1,19 @@
 <h2><%= @page_name %></h2>
 <%= form_for :page, :url => project_gollum_page_path(:id => @page_name), :html => { :method => "put" } do |f| -%>
- <% if ! @project.gollum_wiki.want_ckeditor %>
+ <% if @project.gollum_wiki.want_ckeditor %>
+    <%= hidden_field_tag 'page[format]', @page_format %>
+ <% else %>
   <p>
     <%= label(:gollum_wiki, :markup_language) %>
     <%= select(:page, :format, options_for_select(Gollum::Page::FORMAT_NAMES.keys, @page_format), {:disabled => false}) %></p>
   </p>
- <% else %>
-    <%= hidden_field_tag 'page[format]', @page_format %>
  <% end %>
 
-<%= f.text_area :formatted_data, :class => "wiki-edit", :id=> 'raw_data_id',  :cols => 100, :rows => 50 %>
+<% if @project.gollum_wiki.want_wiki_backend %>
+  <%= f.text_area :formatted_data, :class => "wiki-edit", :id=> 'raw_data_id',  :cols => 100, :rows => 40 %>
+<% else %>
+  <%= f.text_area :raw_data, :class => "wiki-edit", :id=> 'raw_data_id',  :cols => 100, :rows => 50 %>
+<% end %>
 <!--%# < % = wikitoolbar_for 'raw_data_id' % > -->
 <%= include_ckeditor_if_wanted 'raw_data_id' %>
 
@@ -20,6 +24,7 @@
     previewScript = "javascript:RedmineGollum.preview('preview', 'page_raw_data', 'page_format', '#{previewUrl}')"
   %>
   <%= link_to(l(:label_preview), previewScript) %>
+  <%= link_to(:label_raw, {:contoller => 'gollum_pages', :action => :raw, :id=> @page_name}, :target=>'raw')%>
 </p>
 <% end %>
 

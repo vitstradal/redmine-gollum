@@ -161,10 +161,14 @@ class GollumPagesController < ApplicationController
     @user = User.current
 
     commit = { :message => params[:page][:message], :name => @user.name, :email => @user.mail }
-    data = params[:page][:formatted_data]
 
     # zkonvertuj html -> wiki if needed
-    data = ReverseMarkdown.parse data if @project.gollum_wiki.want_wiki_backend
+    if @project.gollum_wiki.want_wiki_backend
+      data = params[:page][:formatted_data]
+      data = ReverseMarkdown.parse data
+    else
+      data = params[:page][:raw_data]
+    end
 
     if @page
       @wiki.update_page(@page, @page.name, @page_format, data, commit)
@@ -175,11 +179,22 @@ class GollumPagesController < ApplicationController
     redirect_to :action => :show, :id => @page_name
   end
 
+  def raw
+    name = params[:id]
+    if page = @wiki.page(name)
+      render :text => page.raw_data, :content_type => 'text/plain'
+    else
+      render :status => 404, :inline => '404 not found:' + name
+      return
+    end
+  end
+
   private
 
   def project_repository_path
     return @project.gollum_wiki.git_path
   end
+
 
   def show_page(name)
     if page = @wiki.page(name)

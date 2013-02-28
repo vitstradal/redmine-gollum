@@ -80,6 +80,14 @@ module ReverseMarkdown
       case element.name.to_sym
         when :html, :body
           ""
+	when :table
+	  "\n"
+	when :tr
+	  ""
+	when :td
+	  "|"
+	when :th
+	  "|="
         when :li
           indent = '  ' * [(element.ancestors('ol').count + element.ancestors('ul').count - 1), 0].max
           if parent == :ol
@@ -133,6 +141,7 @@ module ReverseMarkdown
           end
         when :img
           " !["
+	  " "
         when :hr
           "\n* * *\n"
         when :br
@@ -148,6 +157,14 @@ module ReverseMarkdown
       case element.name.to_sym
         when :html, :body, :pre, :hr
           ""
+	when :table
+	  ""
+	when :tr
+	  "|\n"
+	when :td
+	  ""
+	when :th
+	  ""
         when :p
           "\n\n"
         when :div
@@ -174,6 +191,7 @@ module ReverseMarkdown
           end
         when :img
           "#{element['alt']}](#{element['src']}#{title_markdown(element)}) "
+          "{{#{element['src']}|#{title_markdown(element)}}} "
         else
           handle_error "unknown end tag: #{element.name}"
           ""
