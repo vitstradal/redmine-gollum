@@ -24,7 +24,7 @@
     previewScript = "javascript:RedmineGollum.preview('preview', 'page_raw_data', 'page_format', '#{previewUrl}')"
   %>
   <%= link_to(l(:label_preview), previewScript) %>
-  <%= link_to(:label_raw, {:contoller => 'gollum_pages', :action => :raw, :id=> @page_name}, :target=>'raw')%>
+  <%= link_to(l(:label_raw), {:contoller => 'gollum_pages', :action => :raw, :id=> @page_name}, :target=>'raw')%>
 </p>
 <% end %>
 

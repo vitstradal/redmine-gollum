@@ -89,12 +89,18 @@ module ReverseMarkdown
 	when :th
 	  "|="
         when :li
-          indent = '  ' * [(element.ancestors('ol').count + element.ancestors('ul').count - 1), 0].max
-          if parent == :ol
-            "#{indent}#{self.li_counter += 1}. "
-          else
-            "#{indent}- "
-          end
+#          indent = '  ' * [(element.ancestors('ol').count + element.ancestors('ul').count - 1), 0].max
+#          if parent == :ol
+#            "#{indent}#{self.li_counter += 1}. "
+#	    li_counter
+#          else
+#            "#{indent}- "
+#          end
+          level = element.ancestors('ol').count + element.ancestors('ul').count
+          star = '*'
+	  star = '#' if parent == :ol
+	  ret = (star * level) + " "
+	  ret
         when :pre
           "\n"
         when :ol
@@ -122,7 +128,7 @@ module ReverseMarkdown
           element.name =~ /h(\d)/
           "\n" + ('#' * $1.to_i) + ' '
         when :em, :i
-          element.text.strip.empty? ? '' : '_' if (element.ancestors('em') + element.ancestors('i')).empty?
+          element.text.strip.empty? ? '' : '//' if (element.ancestors('em') + element.ancestors('i')).empty?
         when :strong, :b
           element.text.strip.empty? ? '' : '**' if (element.ancestors('strong') + element.ancestors('b')).empty?
         when :blockquote
@@ -134,8 +140,9 @@ module ReverseMarkdown
             " `"
           end
         when :a
-          if !element.text.strip.empty? && element['href'] && !element['href'].start_with?('#')
+          if !element.text.strip.empty? && element['href'] 
             " ["
+            " [[#{element['href']}|"
           else
             " "
           end
@@ -184,11 +191,12 @@ module ReverseMarkdown
            '` '
           end
         when :a
-          if !element.text.strip.empty? && element['href'] && !element['href'].start_with?('#')
-            "](#{element['href']}#{title_markdown(element)})"
-          else
-            ""
-          end
+	    "]]"
+#          if !element.text.strip.empty? && element['href'] && !element['href'].start_with?('#')
+#            "](#{element['href']}#{title_markdown(element)})"
+#          else
+#            ""
+#          end
         when :img
           "#{element['alt']}](#{element['src']}#{title_markdown(element)}) "
           "{{#{element['src']}|#{title_markdown(element)}}} "
