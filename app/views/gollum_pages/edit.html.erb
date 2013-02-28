@@ -37,3 +37,6 @@
 <base href='<%= url_for :controller => 'gollum_pages', :action => 'index' %>' />
 <% end %>
 
+<% content_for :sidebar do %>
+  <%= render :partial => 'sidebar' %>
+<% end %>
