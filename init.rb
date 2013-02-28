@@ -38,7 +38,7 @@ Redmine::Plugin.register :redmine_gollum do
            :partial => 'shared/settings'
 
   project_module :gollum_pages do
-    permission :view_gollum_pages,   :gollum_pages => [:index, :show, :file, :raw]
+    permission :view_gollum_pages,   :gollum_pages => [:index, :show, :file, :raw, :list]
     permission :add_gollum_pages,    :gollum_pages => [:new, :create, :upload, :newpage]
     permission :edit_gollum_pages,   :gollum_pages => [:edit, :update]
     permission :delete_gollum_pages, :gollum_pages => [:destroy]

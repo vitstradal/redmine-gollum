@@ -25,6 +25,22 @@ class GollumPagesController < ApplicationController
     end
   end
 
+#  class MyWiki < Gollum::Wiki
+#
+#    def file_list(ref)
+#      if sha = @access.ref_to_sha(ref)
+#        commit = @access.commit(sha)
+#        tree_map_for(sha, true).inject([]) do |list, entry|
+#          next list if entry.name.start_with?('_')
+#          next list if @page_class.valid_page_name?(entry.name)
+#          list << entry.file(self, commit)
+#        end
+#      else
+#        []
+#      end
+#    end
+#  end
+
   def index
     redirect_to :action => :show, :id => "Home"
   end
@@ -155,6 +171,14 @@ class GollumPagesController < ApplicationController
     #Rails.logger.fatal @page.to_yaml
   end
 
+  def list
+    @pages = @wiki.pages
+    tree = @wiki.tree_map_for(@wiki.ref, true)
+    dir = @project.gollum_wiki.images_directory
+    entries = tree.select { |e| e.path.index(dir) == 0 }
+    @files = entries.map { |e| e.path }
+  end
+
   def update
     @page_name = params[:id]
     @page_format = params[:page][:format].to_sym
@@ -231,6 +255,7 @@ class GollumPagesController < ApplicationController
 
     gollum_base_path = project_gollum_pages_path
     @wiki = Gollum::Wiki.new(git_path,
+    #@wiki = GollumPagesController::MyWiki.new(git_path,
                             :base_path => gollum_base_path,
                             :page_file_dir => wiki_dir,
 			    :file_class=>::GollumPagesController::MyGollumFile)

@@ -1,6 +1,7 @@
 resources :projects do
   match 'img/:id.:ext' => 'gollum_pages#file'
   match 'gollum_pages/img/:id.:ext' => 'gollum_pages#file'
+  match 'list' => 'gollum_pages#list'
 
   get   'newpage' => 'gollum_pages#newpage'
   post  'newpage' => 'gollum_pages#edit'
