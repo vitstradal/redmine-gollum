@@ -3,7 +3,7 @@
 <div class="box tabular">
   <p>
     <%= label(:gollum_wiki, :git_path) %>
-    <%= f.text_field :git_path %>
+    <%= f.text_field :git_path, :size => 50 %>
   </p>
   <p>
     <%= label(:gollum_wiki, :markup_language) %>
@@ -12,6 +12,18 @@
   <p>
     <%= label(:gollum_wiki, :page_files_directory) %>
     <%= f.text_field :directory %>
+  </p>
+  <p>
+    <%= label(:gollum_wiki, :images_directory) %>
+    <%= f.text_field :images_directory %>
+  </p>
+  <p>
+    <%= label(:gollum_want_ckeditor, :want_ckeditor) %>
+    <%= f.check_box :want_ckeditor %>
+  </p>
+  <p>
+    <%= label(:gollum_want_wiki_backend, :want_wiki_backend) %>
+    <%= f.check_box :want_wiki_backend %>
   </p>
 </div>
 

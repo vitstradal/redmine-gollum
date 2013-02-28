@@ -1,8 +1,10 @@
 resources :projects do
-  match 'file/:id.:ext' => 'gollum_pages#file'
-  match 'gollum_pages/file/:id.:ext' => 'gollum_pages#file'
+  match 'img/:id.:ext' => 'gollum_pages#file'
+  match 'gollum_pages/img/:id.:ext' => 'gollum_pages#file'
 
-  match 'upload' => 'gollum_pages#upload'
+  get 'newpage' => 'gollum_pages#newpage'
+  post 'newpage' => 'gollum_pages#edit'
+  match 'upload'  => 'gollum_pages#upload', :as => :upload
   resources :gollum_pages do
     collection do
       post 'preview'

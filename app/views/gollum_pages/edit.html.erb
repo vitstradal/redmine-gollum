@@ -1,12 +1,17 @@
 <h2><%= @page_name %></h2>
 <%= form_for :page, :url => project_gollum_page_path(:id => @page_name), :html => { :method => "put" } do |f| -%>
+ <% if ! @project.gollum_wiki.want_ckeditor %>
   <p>
     <%= label(:gollum_wiki, :markup_language) %>
     <%= select(:page, :format, options_for_select(Gollum::Page::FORMAT_NAMES.keys, @page_format), {:disabled => false}) %></p>
   </p>
+ <% else %>
+    <%= hidden_field_tag 'page[format]', @page_format %>
+ <% end %>
 
-<%= f.text_area :raw_data, :class => "wiki-edit", :id=> 'raw_data_id',  :cols => 100, :row => 25 %>
-<%= wikitoolbar_for 'raw_data_id' %>
+<%= f.text_area :formatted_data, :class => "wiki-edit", :id=> 'raw_data_id',  :cols => 100, :rows => 50 %>
+<!--%# < % = wikitoolbar_for 'raw_data_id' % > -->
+<%= include_ckeditor_if_wanted 'raw_data_id' %>
 
 <p>
   <%= f.submit(l(:button_save)) %>
@@ -21,3 +26,9 @@
 
 <div id="preview"></div>
 <%= javascript_include_tag "preview.js", :plugin => 'redmine_gollum' %>
+
+
+<% content_for :header_tags do %>
+<base href='<%= url_for :controller => 'gollum_pages', :action => 'index' %>' />
+<% end %>
+
