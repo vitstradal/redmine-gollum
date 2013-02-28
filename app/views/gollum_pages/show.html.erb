@@ -1,5 +1,5 @@
 <div class="contextual">
-<% if @project.gollum_wiki.want_wiki_backend %>
+<% if @project.gollum_wiki.store_as_wiki %>
   <%= link_to_if_authorized(
         l(:button_raw),
         {:action => 'raw', :id => @page_name},

@@ -101,8 +101,8 @@ module ReverseMarkdown
 	  star = '#' if parent == :ol
 	  ret = (star * level) + " "
 	  ret
-        when :pre
-          "\n"
+	when :pre
+	  "\n{{{\n"
         when :ol
           self.li_counter = 0
           "\n"
@@ -126,7 +126,7 @@ module ReverseMarkdown
           end
         when :h1, :h2, :h3, :h4 # /h(\d)/ for 1.9
           element.name =~ /h(\d)/
-          "\n" + ('#' * $1.to_i) + ' '
+          "\n" + ('=' * $1.to_i) + ' '
         when :em, :i
           element.text.strip.empty? ? '' : '//' if (element.ancestors('em') + element.ancestors('i')).empty?
         when :strong, :b
@@ -150,7 +150,7 @@ module ReverseMarkdown
           " !["
 	  " "
         when :hr
-          "\n* * *\n"
+          "\n----\n"
         when :br
           "  \n"
         else
@@ -162,8 +162,10 @@ module ReverseMarkdown
     def ending(element)
       parent = element.parent ? element.parent.name.to_sym : nil
       case element.name.to_sym
-        when :html, :body, :pre, :hr
+        when :html, :body, :hr
           ""
+	when :pre
+	  "\n}}}\n"
 	when :table
 	  ""
 	when :tr

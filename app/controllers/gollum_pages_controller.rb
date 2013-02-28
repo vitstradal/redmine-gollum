@@ -107,7 +107,7 @@ class GollumPagesController < ApplicationController
     EOT
     if ckeditor_num
 	render :inline => script
-	Rails.logger.fatal 'script rednered:' + script
+	#Rails.logger.fatal 'script rednered:' + script
 	return
     else
         flash[:notice] = name + ' uploaded'
@@ -142,16 +142,17 @@ class GollumPagesController < ApplicationController
     @page = @wiki.page(@page_name)
 
     if @page
-    	if @project.gollum_wiki.want_wiki_backend
-	      @content = ":" 
-	else
-	      @content = @page.text_data
-	end
+    	#if @project.gollum_wiki.store_as_wiki
+	#      @content = ":" 
+	#else
+	#      @content = @page.text_data
+	#end
 	@page_format = @page.format
     else
-        @content = '' 
+        #@content = '' 
         @page_format = @project.gollum_wiki.markup_language.to_sym
     end
+    #Rails.logger.fatal @page.to_yaml
   end
 
   def update
@@ -163,7 +164,7 @@ class GollumPagesController < ApplicationController
     commit = { :message => params[:page][:message], :name => @user.name, :email => @user.mail }
 
     # zkonvertuj html -> wiki if needed
-    if @project.gollum_wiki.want_wiki_backend
+    if @project.gollum_wiki.store_as_wiki
       data = params[:page][:formatted_data]
       data = ReverseMarkdown.parse data
     else

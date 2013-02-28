@@ -1,6 +1,6 @@
 <h2><%= @page_name %></h2>
 <%= form_for :page, :url => project_gollum_page_path(:id => @page_name), :html => { :method => "put" } do |f| -%>
- <% if @project.gollum_wiki.want_ckeditor %>
+ <% if @project.gollum_wiki.use_ckeditor %>
     <%= hidden_field_tag 'page[format]', @page_format %>
  <% else %>
   <p>
@@ -9,7 +9,7 @@
   </p>
  <% end %>
 
-<% if @project.gollum_wiki.want_wiki_backend %>
+<% if @project.gollum_wiki.store_as_wiki %>
   <%= f.text_area :formatted_data, :class => "wiki-edit", :id=> 'raw_data_id',  :cols => 100, :rows => 40 %>
 <% else %>
   <%= f.text_area :raw_data, :class => "wiki-edit", :id=> 'raw_data_id',  :cols => 100, :rows => 50 %>
