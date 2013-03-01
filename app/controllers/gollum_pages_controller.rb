@@ -6,6 +6,25 @@ class GollumPagesController < ApplicationController
 
   before_filter :find_project, :find_wiki
   before_filter :authorize, :except => [ :preview ]
+
+  # FIXME: rid off stupid gollum prewiki wikiing
+  # wtf?  wtF? why?
+  # dirty hack
+  class MyMarkup < Gollum::Markup
+    def render(no_follow = false, encoding = nil)
+      data = @data.dup
+      begin
+        data = GitHub::Markup.render(@name, data)
+        if data.nil?
+          raise "There was an error converting #{@name} to HTML."
+        end
+      rescue Object => e
+        data = %{<p class="gollum-error">#{e.message}</p>}
+      end
+      data
+    end
+  end
+
   class MyGollumFile < Gollum::File
     # Find a file in the given Gollum repo.
     #
@@ -258,7 +277,8 @@ class GollumPagesController < ApplicationController
     #@wiki = GollumPagesController::MyWiki.new(git_path,
                             :base_path => gollum_base_path,
                             :page_file_dir => wiki_dir,
-			    :file_class=>::GollumPagesController::MyGollumFile)
+			    :file_class=>::GollumPagesController::MyGollumFile,
+			    :markup_classes => Hash.new(::GollumPagesController::MyMarkup))
 
   end
 
