@@ -42,4 +42,6 @@ Redmine::Plugin.register :redmine_gollum do
   end
 
   menu :project_menu, :gollum, { :controller => :gollum, :action => :index }, :caption => 'Gollum', :before => :wiki, :param => :project_id
+
 end
+
