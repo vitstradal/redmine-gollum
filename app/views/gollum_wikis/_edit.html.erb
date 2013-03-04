@@ -3,15 +3,30 @@
 <div class="box tabular">
   <p>
     <%= label(:gollum_wiki, :git_path) %>
-    <%= f.text_field :git_path %>
+    <%= f.text_field :git_path, :size => 50 %>
   </p>
   <p>
     <%= label(:gollum_wiki, :markup_language) %>
-    <%= select_tag(:markup_language, options_for_select(Gollum::Page::FORMAT_NAMES.keys)) %></p>
+    <%= select(:gollum_wiki, :markup_language, options_for_select(Gollum::Page::FORMAT_NAMES.keys, @gollum_wiki.markup_language)) %></p>
   </p>
   <p>
     <%= label(:gollum_wiki, :page_files_directory) %>
     <%= f.text_field :directory %>
+  </p>
+  <p>
+    <%= label(:gollum_images_directory, :images_directory) %>
+    <%= f.text_field :images_directory %>
+  </p>
+  <p>
+    <%= label(:gollum_use_ckeditor, :use_ckeditor) %>
+    <%= f.check_box :use_ckeditor %>
+    <% if ! Redmine::Plugin.installed? 'redmine_ckeditorE' %>
+       <span>Allert: redmine_ckeditor plugin is not installed</span>
+    <% end %>
+  </p>
+  <p>
+    <%= label(:gollum_store_as_wiki, :store_as_wiki) %>
+    <%= f.check_box :store_as_wiki %>
   </p>
 </div>
 

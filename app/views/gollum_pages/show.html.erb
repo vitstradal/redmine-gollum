@@ -1,4 +1,11 @@
 <div class="contextual">
+<% if @project.gollum_wiki.store_as_wiki %>
+  <%= link_to_if_authorized(
+        l(:button_raw),
+        {:action => 'raw', :id => @page_name},
+        :class => 'icon icon-file')
+  %>
+<% end %>
 <% if @editable %>
   <%= link_to_if_authorized(
         l(:button_edit),
@@ -11,4 +18,9 @@
 <div class="wiki wiki-page">
 <h1><%= @page_title %></h1>
 <%= @page_content %>
-</div> 
+</div>
+
+<% content_for :sidebar do %>
+  <%= render :partial => 'sidebar' %>
+<% end %>
+
