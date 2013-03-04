@@ -10,12 +10,18 @@
  <% end %>
 
 <% if @project.gollum_wiki.store_as_wiki %>
-  <%= f.text_area :formatted_data, :class => "wiki-edit", :id=> 'raw_data_id',  :cols => 100, :rows => 40 %>
+  <%= f.text_area :formatted_data, :class => "wiki-edit", :id=> 'raw_data_id',  :cols => 100, :rows => 30 %>
 <% else %>
-  <%= f.text_area :raw_data, :class => "wiki-edit", :id=> 'raw_data_id',  :cols => 100, :rows => 50 %>
+  <%= f.text_area :raw_data, :class => "wiki-edit", :id=> 'raw_data_id',  :cols => 100, :rows => 30 %>
 <% end %>
 <!--%# < % = wikitoolbar_for 'raw_data_id' % > -->
-<%= include_ckeditor_if_wanted 'raw_data_id' %>
+<% if @project.gollum_wiki.use_ckeditor %>
+  <% if Redmine::Plugin.installed? 'redmine_ckeditor' %>
+     <%= include_ckeditor_if_wanted 'raw_data_id' %>
+  <% else %>
+     <div>Allert: redmine_ckeditor plugin is not installed</div>
+  <% end %>
+<% end %>
 
 <p>
   <%= f.submit(l(:button_save)) %>
