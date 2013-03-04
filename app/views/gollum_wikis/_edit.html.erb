@@ -20,6 +20,9 @@
   <p>
     <%= label(:gollum_use_ckeditor, :use_ckeditor) %>
     <%= f.check_box :use_ckeditor %>
+    <% if ! Redmine::Plugin.installed? 'redmine_ckeditorE' %>
+       <span>Allert: redmine_ckeditor plugin is not installed</span>
+    <% end %>
   </p>
   <p>
     <%= label(:gollum_store_as_wiki, :store_as_wiki) %>
