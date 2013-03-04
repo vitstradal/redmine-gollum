@@ -16,10 +16,12 @@
 <% end %>
 <!--%# < % = wikitoolbar_for 'raw_data_id' % > -->
 <% if @project.gollum_wiki.use_ckeditor %>
-  <% if Redmine::Plugin.installed? 'redmine_ckeditor' %>
-     <%= include_ckeditor_if_wanted 'raw_data_id' %>
+  <% if Redmine::Plugin.installed?('redmine_ckeditor') %>
+     <% if  @project.gollum_wiki.use_ckeditor %>  
+       <%= gollum_include_ckeditor 'raw_data_id' %>
+     <% end %>
   <% else %>
-     <div>Allert: redmine_ckeditor plugin is not installed</div>
+     <div class="flash error">Alert: redmine_ckeditor plugin is not installed</div>
   <% end %>
 <% end %>
 
