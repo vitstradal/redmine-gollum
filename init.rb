@@ -40,8 +40,6 @@ Redmine::Plugin.register :redmine_gollum do
 
     permission :manage_gollum_wiki, :gollum_wikis => [:index,:show, :create, :update]
   end
-
   menu :project_menu, :gollum, { :controller => :gollum, :action => :index }, :caption => 'Gollum', :before => :wiki, :param => :project_id
-
 end
 
