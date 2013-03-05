@@ -1,4 +1,14 @@
+<% if @project.gollum_wiki.store_as_wiki %>
+<div class="contextual">
+  <%= link_to_if_authorized(
+        l(:button_raw),
+        {:action => 'raw', :id => @page_name},
+        :class => 'icon icon-file')
+  %>
+</div>
 <h2><%= @page_name %></h2>
+<% end %>
+
 <%= form_for :page, :url => project_gollum_page_path(:id => @page_name), :html => { :method => "put" } do |f| -%>
  <% if @project.gollum_wiki.use_ckeditor %>
     <%= hidden_field_tag 'page[format]', @page_format %>
@@ -32,7 +42,6 @@
     previewScript = "javascript:RedmineGollum.preview('preview', 'page_raw_data', 'page_format', '#{previewUrl}')"
   %>
   <%= link_to(l(:label_preview), previewScript) %>
-  <%= link_to(l(:label_raw), {:contoller => 'gollum_pages', :action => :raw, :id=> @page_name}, :target=>'raw')%>
 </p>
 <% end %>
 
