@@ -1,6 +1,6 @@
 require 'uri'
 module GollumPagesHelper
-    def include_ckeditor_if_wanted(field_id)
+    def gollum_include_ckeditor(field_id)
     	return '' if ! @project.gollum_wiki.use_ckeditor; 
     	ckeditor_include + ckeditor(field_id)
     end
