@@ -44,22 +44,6 @@ class GollumPagesController < ApplicationController
     end
   end
 
-#  class MyWiki < Gollum::Wiki
-#
-#    def file_list(ref)
-#      if sha = @access.ref_to_sha(ref)
-#        commit = @access.commit(sha)
-#        tree_map_for(sha, true).inject([]) do |list, entry|
-#          next list if entry.name.start_with?('_')
-#          next list if @page_class.valid_page_name?(entry.name)
-#          list << entry.file(self, commit)
-#        end
-#      else
-#        []
-#      end
-#    end
-#  end
-
   def index
     redirect_to :action => :show, :id => "Home"
   end
@@ -73,18 +57,6 @@ class GollumPagesController < ApplicationController
 
     show_page(params[:id])
   end
-
-#    map = @wiki.tree_map_for(@wiki.ref)
-#    all =''
-#    map.each do |entry|
-#    	#all = all + ',' + entry.dir + '/' + entry.name
-#    	all = all + ',' + entry.path.downcase
-#    end
-#    if entry = map.detect { |entry| entry.path.downcase == 'file/' + @file_name }
-#    	all = 'NASEL JSEM' + entry.path
-#    end
-#
-
 
   def file 
     ext = params[:ext]
@@ -120,8 +92,8 @@ class GollumPagesController < ApplicationController
   # <form><input type=file name=upload[datafile]>
   def upload 
     if request.get?
-    	# render upload.html.erb
-    	return
+        # render upload.html.erb
+        return
     end
 
 
@@ -141,13 +113,13 @@ class GollumPagesController < ApplicationController
     <script type="text/javascript">window.parent.CKEDITOR.tools.callFunction(#{ckeditor_num}, 'img/#{name}', '');</script>
     EOT
     if ckeditor_num
-	render :inline => script
-	#Rails.logger.fatal 'script rednered:' + script
-	return
+        render :inline => script
+        #Rails.logger.fatal 'script rednered:' + script
+        return
     else
         flash[:notice] = name + ' uploaded'
-	redirect_to :action => :upload
-	return
+        redirect_to :action => :upload
+        return
     end
   end
   
@@ -177,17 +149,10 @@ class GollumPagesController < ApplicationController
     @page = @wiki.page(@page_name)
 
     if @page
-    	#if @project.gollum_wiki.store_as_wiki
-	#      @content = ":" 
-	#else
-	#      @content = @page.text_data
-	#end
-	@page_format = @page.format
+        @page_format = @page.format
     else
-        #@content = '' 
         @page_format = @project.gollum_wiki.markup_language.to_sym
     end
-    #Rails.logger.fatal @page.to_yaml
   end
 
   def list
@@ -274,11 +239,10 @@ class GollumPagesController < ApplicationController
 
     gollum_base_path = project_gollum_pages_path
     @wiki = Gollum::Wiki.new(git_path,
-    #@wiki = GollumPagesController::MyWiki.new(git_path,
                             :base_path => gollum_base_path,
                             :page_file_dir => wiki_dir,
-			    :file_class=>::GollumPagesController::MyGollumFile,
-			    :markup_classes => Hash.new(::GollumPagesController::MyMarkup))
+                            :file_class=>::GollumPagesController::MyGollumFile,
+                            :markup_classes => Hash.new(::GollumPagesController::MyMarkup))
 
   end
 
