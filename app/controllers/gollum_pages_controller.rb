@@ -7,10 +7,33 @@ class GollumPagesController < ApplicationController
   before_filter :find_project, :find_wiki
   before_filter :authorize, :except => [ :preview ]
 
+  # add trac formater if possible
+#  if defined? ::RedmineTracFormatter::WikiFormatter
+#    # HACK or it is normal?
+#    fn = Gollum::Page::FORMAT_NAMES
+#    fn[:trac] = 'Trac'
+#    Gollum::Page.send :remove_const, :FORMAT_NAMES if defined? Gollum::Page::FORMAT_NAMES
+#    Gollum::Page::FORMAT_NAMES = fn
+#  end
+#
   # FIXME: rid off stupid gollum prewiki wikiing
   # wtf?  wtF? why?
   # dirty hack
   class MyMarkup < Gollum::Markup
+    def initialize(page)
+        super(page)
+
+        # add trac formater if possible
+        if defined? ::RedmineTracFormatter::WikiFormatter
+          f =  RedmineTracFormatter::WikiFormatter.new
+          GitHub::Markup.add_markup :creole do |content|
+             f =  RedmineTracFormatter::WikiFormatter.new(content)
+             f.to_html
+          end
+        end
+    end
+
+
     def render(no_follow = false, encoding = nil)
       data = @data.dup
       begin
@@ -25,6 +48,22 @@ class GollumPagesController < ApplicationController
     end
   end
 
+#  class MyGollumPage < Gollum::Page
+#    def self.format_to_ext(format)
+#      case format
+#        when :markdown  then 'md'
+#        when :textile   then 'textile'
+#        when :rdoc      then 'rdoc'
+#        when :org       then 'org'
+#        when :creole    then 'creole'
+#        when :rest      then 'rest'
+#        when :asciidoc  then 'asciidoc'
+#        when :pod       then 'pod'
+#        when :mediawiki then 'mediawiki'
+#        when :trac      then 'trac'
+#      end
+#    end
+#  end
   class MyGollumFile < Gollum::File
     # Find a file in the given Gollum repo.
     #
@@ -237,13 +276,19 @@ class GollumPagesController < ApplicationController
       wiki_dir = nil
     end
 
+    a = ::RedmineTracFormatter::WikiFormatter
     gollum_base_path = project_gollum_pages_path
     @wiki = Gollum::Wiki.new(git_path,
                             :base_path => gollum_base_path,
                             :page_file_dir => wiki_dir,
                             :file_class=>::GollumPagesController::MyGollumFile,
-                            :markup_classes => Hash.new(::GollumPagesController::MyMarkup))
+                            #:page_class=>::GollumPagesController::MyGollumPage,
+                            :markup_classes => create_markup_classes)
 
+  end
+
+  def create_markup_classes
+     Hash.new(::GollumPagesController::MyMarkup)
   end
 
   def get_html(data, format)
