@@ -1,3 +1,5 @@
+<%= link_to_if_authorized( l(:button_raw), {:action => 'raw', :id => @page_name}, :class => 'icon icon-file') %>
+
 <h2><%= @page_name %></h2>
 <%= form_for :page, :url => project_gollum_page_path(:id => @page_name), :html => { :method => "put" } do |f| -%>
   <p>

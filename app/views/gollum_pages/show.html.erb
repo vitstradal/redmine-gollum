@@ -1,4 +1,9 @@
 <div class="contextual">
+<%= link_to_if_authorized(
+        l(:button_raw),
+        {:action => 'raw', :id => @page_name},
+        :class => 'icon icon-file')
+%>
 <% if @editable %>
   <%= link_to_if_authorized(
         l(:button_edit),

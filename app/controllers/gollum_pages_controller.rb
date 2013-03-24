@@ -46,6 +46,16 @@ class GollumPagesController < ApplicationController
     redirect_to :action => :show, :id => @page_name
   end
 
+  def raw
+    name = params[:id]
+    if page = @wiki.page(name)
+      render :text => page.raw_data, :content_type => 'text/plain'
+    else
+      render :status => 404, :inline => '404 not found:' + name
+      return
+    end
+  end
+
   private
 
   def project_repository_path
